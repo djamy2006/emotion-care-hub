@@ -8,33 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Mental Health App Color Palette */
+    --background: 210 15% 98%;
+    --foreground: 213 15% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 213 15% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 213 15% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Calming blue primary - trust and serenity */
+    --primary: 210 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 210 30% 94%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Soft green secondary - growth and healing */
+    --secondary: 158 45% 92%;
+    --secondary-foreground: 158 45% 25%;
+    --secondary-accent: 158 65% 45%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 213 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Warm accent for engagement */
+    --accent: 35 100% 94%;
+    --accent-foreground: 35 100% 35%;
+    --accent-warm: 35 85% 60%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 90%;
+    --input: 210 20% 96%;
+    --ring: 210 100% 56%;
+
+    /* Custom therapeutic gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 56%), hsl(210 90% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(158 65% 45%), hsl(158 45% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 56% / 0.9), hsl(158 65% 45% / 0.8));
+    --gradient-calm: linear-gradient(180deg, hsl(210 15% 98%), hsl(210 30% 94%));
+
+    /* Elegant shadows with therapeutic colors */
+    --shadow-soft: 0 4px 20px hsl(210 100% 56% / 0.1);
+    --shadow-medium: 0 8px 30px hsl(210 100% 56% / 0.15);
+    --shadow-strong: 0 15px 40px hsl(210 100% 56% / 0.2);
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-gentle: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 
     --radius: 0.5rem;
 
