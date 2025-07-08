@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 import heroVideo1 from "@/assets/hero-video-1.jpg";
@@ -26,6 +27,7 @@ const heroImages = [
 ];
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -137,10 +139,20 @@ export const HeroSection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in">
-          <Button variant="hero" size="xl" className="text-lg">
+          <Button 
+            variant="hero" 
+            size="xl" 
+            className="text-lg"
+            onClick={() => navigate("/assessment")}
+          >
             Take a Free Assessment
           </Button>
-          <Button variant="warm" size="xl" className="text-lg">
+          <Button 
+            variant="warm" 
+            size="xl" 
+            className="text-lg"
+            onClick={() => navigate("/booking")}
+          >
             Book a Session
           </Button>
         </div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Zap, Users, Clock, CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const assessments = [
   {
@@ -37,6 +38,7 @@ const assessments = [
 ];
 
 export const AssessmentPreview = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-gradient-calm">
       <div className="container mx-auto px-6">
@@ -86,7 +88,11 @@ export const AssessmentPreview = () => {
                 <CardDescription className="mb-6 text-sm leading-relaxed">
                   {assessment.description}
                 </CardDescription>
-                <Button variant="therapeutic" className="w-full">
+                <Button 
+                  variant="therapeutic" 
+                  className="w-full"
+                  onClick={() => navigate(`/assessment?type=${assessment.id}`)}
+                >
                   Start Assessment
                 </Button>
               </CardContent>
@@ -95,7 +101,12 @@ export const AssessmentPreview = () => {
         </div>
 
         <div className="text-center">
-          <Button variant="outline" size="lg" className="hover:shadow-soft transition-all duration-300">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="hover:shadow-soft transition-all duration-300"
+            onClick={() => navigate("/assessment")}
+          >
             View All Assessments
           </Button>
         </div>
