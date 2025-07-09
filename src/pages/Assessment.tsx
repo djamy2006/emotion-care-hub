@@ -5,6 +5,8 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Navigation } from "@/components/Navigation";
+import { AIChat } from "@/components/AIChat";
 
 const assessments = {
   "phq-9": {
@@ -55,6 +57,7 @@ const Assessment = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleAssessmentSelect = (id: string) => {
     setSelectedAssessment(id);
@@ -112,8 +115,10 @@ const Assessment = () => {
 
   if (!selectedAssessment) {
     return (
-      <div className="min-h-screen bg-gradient-calm py-12">
-        <div className="container mx-auto px-6">
+      <div className="min-h-screen bg-gradient-calm">
+        <Navigation />
+        <div className="py-12">
+          <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <Button 
               variant="ghost" 
@@ -148,7 +153,9 @@ const Assessment = () => {
               </Card>
             ))}
           </div>
+          </div>
         </div>
+        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
       </div>
     );
   }
@@ -161,8 +168,10 @@ const Assessment = () => {
     const interpretation = getScoreInterpretation(score, selectedAssessment);
 
     return (
-      <div className="min-h-screen bg-gradient-calm py-12">
-        <div className="container mx-auto px-6">
+      <div className="min-h-screen bg-gradient-calm">
+        <Navigation />
+        <div className="py-12">
+          <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto">
             <Card className="shadow-medium">
               <CardHeader className="text-center">
@@ -205,14 +214,18 @@ const Assessment = () => {
               </CardContent>
             </Card>
           </div>
+          </div>
         </div>
+        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-calm py-12">
-      <div className="container mx-auto px-6">
+    <div className="min-h-screen bg-gradient-calm">
+      <Navigation />
+      <div className="py-12">
+        <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
             <Button 
@@ -275,7 +288,8 @@ const Assessment = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+        </div>
+      <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
     </div>
   );
 };

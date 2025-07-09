@@ -17,6 +17,8 @@ import {
   Calendar as CalendarIcon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Navigation } from "@/components/Navigation";
+import { AIChat } from "@/components/AIChat";
 
 const providers = [
   {
@@ -75,6 +77,7 @@ const Booking = () => {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedMode, setSelectedMode] = useState<string>("");
   const [currentStep, setCurrentStep] = useState(1);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleProviderSelect = (providerId: number) => {
     setSelectedProvider(providerId);
@@ -143,8 +146,10 @@ const Booking = () => {
   );
 
   if (currentStep === 2 && selectedProviderData) {
-    return (
-      <div className="min-h-screen bg-gradient-calm py-12">
+  return (
+    <div className="min-h-screen bg-gradient-calm">
+      <Navigation />
+      <div className="py-12">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <Button 
@@ -252,6 +257,7 @@ const Booking = () => {
             </div>
           </div>
         </div>
+        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
       </div>
     );
   }
@@ -299,6 +305,7 @@ const Booking = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
     </div>
   );
 };
