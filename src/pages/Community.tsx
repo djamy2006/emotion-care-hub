@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, MessageSquare, Heart, Calendar, Plus, Trending, Shield } from "lucide-react";
+import { Users, MessageSquare, Heart, Calendar, Plus, TrendingUp, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Community = () => {
@@ -118,7 +118,7 @@ const Community = () => {
                 <div className="flex justify-between items-center">
                   <div>
                     <CardTitle className="flex items-center">
-                      <Trending className="h-5 w-5 mr-2" />
+                      <TrendingUp className="h-5 w-5 mr-2" />
                       Trending Discussions
                     </CardTitle>
                     <CardDescription>Popular conversations in the community</CardDescription>

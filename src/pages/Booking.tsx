@@ -257,14 +257,17 @@ const Booking = () => {
             </div>
           </div>
         </div>
-        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
       </div>
-    );
+      <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
+    </div>
+  );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-calm py-12">
-      <div className="container mx-auto px-6">
+    <div className="min-h-screen bg-gradient-calm">
+      <Navigation />
+      <div className="py-12">
+        <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <Button 
             variant="ghost" 
@@ -304,6 +307,7 @@ const Booking = () => {
             {providers.filter(p => p.title.includes("Coach")).map(renderProviderCard)}
           </TabsContent>
         </Tabs>
+        </div>
       </div>
       <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
     </div>

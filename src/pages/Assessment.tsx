@@ -289,6 +289,7 @@ const Assessment = () => {
           </Card>
         </div>
         </div>
+      </div>
       <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
     </div>
   );
