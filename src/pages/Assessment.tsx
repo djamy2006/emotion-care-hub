@@ -194,22 +194,29 @@ const Assessment = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    variant="hero" 
-                    className="flex-1"
-                    onClick={() => navigate("/booking")}
-                  >
-                    Book Professional Session
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={resetAssessment}
-                    className="flex-1"
-                  >
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    Take Another
-                  </Button>
+                <div className="bg-gradient-to-r from-primary/10 to-accent-warm/10 p-6 rounded-lg text-center">
+                  <h3 className="font-semibold text-lg mb-2">Ready to get professional help?</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Join our platform to access certified mental health professionals, 
+                    flexible therapy options, and a supportive community.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button 
+                      variant="hero" 
+                      className="flex-1"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Sign Up for Professional Support
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={resetAssessment}
+                      className="flex-1"
+                    >
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      Take Another Assessment
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
