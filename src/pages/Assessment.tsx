@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChevronLeft, ChevronRight, RotateCcw, User, Mail, Phone, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { AIChat } from "@/components/AIChat";
@@ -48,6 +51,100 @@ const assessments = {
       { value: 2, label: "More than half the days" },
       { value: 3, label: "Nearly every day" }
     ]
+  },
+  "dass-21": {
+    title: "DASS-21 Scale",
+    description: "Depression, Anxiety and Stress Scale",
+    questions: [
+      "I found it hard to wind down",
+      "I was aware of dryness of my mouth",
+      "I couldn't seem to experience any positive feeling at all",
+      "I experienced breathing difficulty",
+      "I found it difficult to work up the initiative to do things",
+      "I tended to over-react to situations",
+      "I experienced trembling (eg, in the hands)",
+      "I felt that I was using a lot of nervous energy",
+      "I was worried about situations in which I might panic",
+      "I felt that I had nothing to look forward to",
+      "I found myself getting agitated",
+      "I found it difficult to relax",
+      "I felt down-hearted and blue",
+      "I was intolerant of anything that kept me from getting on with what I was doing",
+      "I felt I was close to panic",
+      "I was unable to become enthusiastic about anything",
+      "I felt I wasn't worth much as a person",
+      "I felt that I was rather touchy",
+      "I was aware of the action of my heart in the absence of physical exertion",
+      "I felt scared without any good reason",
+      "I felt that life was meaningless"
+    ],
+    options: [
+      { value: 0, label: "Did not apply to me at all" },
+      { value: 1, label: "Applied to me to some degree" },
+      { value: 2, label: "Applied to me to a considerable degree" },
+      { value: 3, label: "Applied to me very much" }
+    ]
+  },
+  "k6": {
+    title: "K6 Psychological Distress Scale",
+    description: "Kessler Psychological Distress Scale",
+    questions: [
+      "How often did you feel nervous?",
+      "How often did you feel hopeless?",
+      "How often did you feel restless or fidgety?",
+      "How often did you feel so depressed that nothing could cheer you up?",
+      "How often did you feel that everything was an effort?",
+      "How often did you feel worthless?"
+    ],
+    options: [
+      { value: 0, label: "None of the time" },
+      { value: 1, label: "A little of the time" },
+      { value: 2, label: "Some of the time" },
+      { value: 3, label: "Most of the time" },
+      { value: 4, label: "All of the time" }
+    ]
+  },
+  "pss": {
+    title: "Perceived Stress Scale",
+    description: "Measures how stressful situations are perceived",
+    questions: [
+      "How often have you been upset because of something that happened unexpectedly?",
+      "How often have you felt that you were unable to control important things in your life?",
+      "How often have you felt nervous and stressed?",
+      "How often have you felt confident about your ability to handle your personal problems?",
+      "How often have you felt that things were going your way?",
+      "How often have you found that you could not cope with all the things that you had to do?",
+      "How often have you been able to control irritations in your life?",
+      "How often have you felt that you were on top of things?",
+      "How often have you been angered because of things that happened that were outside of your control?",
+      "How often have you felt difficulties were piling up so high that you could not overcome them?"
+    ],
+    options: [
+      { value: 0, label: "Never" },
+      { value: 1, label: "Almost Never" },
+      { value: 2, label: "Sometimes" },
+      { value: 3, label: "Fairly Often" },
+      { value: 4, label: "Very Often" }
+    ]
+  },
+  "who-5": {
+    title: "WHO-5 Well-Being Index",
+    description: "World Health Organization Well-Being Index",
+    questions: [
+      "I have felt cheerful and in good spirits",
+      "I have felt calm and relaxed",
+      "I have felt active and vigorous",
+      "I woke up feeling fresh and rested",
+      "My daily life has been filled with things that interest me"
+    ],
+    options: [
+      { value: 0, label: "At no time" },
+      { value: 1, label: "Some of the time" },
+      { value: 2, label: "Less than half of the time" },
+      { value: 3, label: "More than half of the time" },
+      { value: 4, label: "Most of the time" },
+      { value: 5, label: "All of the time" }
+    ]
   }
 };
 
@@ -58,9 +155,21 @@ const Assessment = () => {
   const [answers, setAnswers] = useState<number[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    age: "",
+    gender: "",
+    email: "",
+    phone: ""
+  });
 
   const handleAssessmentSelect = (id: string) => {
     setSelectedAssessment(id);
+    setShowUserDetails(true);
+  };
+
+  const startAssessment = () => {
+    setShowUserDetails(false);
     setCurrentQuestion(0);
     setAnswers([]);
     setIsCompleted(false);
@@ -98,12 +207,31 @@ const Assessment = () => {
       if (score <= 14) return { level: "Moderate", color: "bg-orange-500" };
       if (score <= 19) return { level: "Moderately Severe", color: "bg-red-500" };
       return { level: "Severe", color: "bg-red-700" };
-    } else {
+    } else if (type === "gad-7") {
       if (score <= 4) return { level: "Minimal", color: "bg-secondary-accent" };
       if (score <= 9) return { level: "Mild", color: "bg-accent-warm" };
       if (score <= 14) return { level: "Moderate", color: "bg-orange-500" };
       return { level: "Severe", color: "bg-red-500" };
+    } else if (type === "dass-21") {
+      if (score <= 9) return { level: "Normal", color: "bg-secondary-accent" };
+      if (score <= 13) return { level: "Mild", color: "bg-accent-warm" };
+      if (score <= 20) return { level: "Moderate", color: "bg-orange-500" };
+      if (score <= 27) return { level: "Severe", color: "bg-red-500" };
+      return { level: "Extremely Severe", color: "bg-red-700" };
+    } else if (type === "k6") {
+      if (score <= 7) return { level: "Low", color: "bg-secondary-accent" };
+      if (score <= 12) return { level: "Moderate", color: "bg-accent-warm" };
+      return { level: "High", color: "bg-red-500" };
+    } else if (type === "pss") {
+      if (score <= 13) return { level: "Low Stress", color: "bg-secondary-accent" };
+      if (score <= 26) return { level: "Moderate Stress", color: "bg-accent-warm" };
+      return { level: "High Stress", color: "bg-red-500" };
+    } else if (type === "who-5") {
+      if (score >= 13) return { level: "Good Well-being", color: "bg-secondary-accent" };
+      if (score >= 9) return { level: "Moderate Well-being", color: "bg-accent-warm" };
+      return { level: "Poor Well-being", color: "bg-red-500" };
     }
+    return { level: "Unknown", color: "bg-gray-500" };
   };
 
   const resetAssessment = () => {
@@ -111,6 +239,8 @@ const Assessment = () => {
     setCurrentQuestion(0);
     setAnswers([]);
     setIsCompleted(false);
+    setShowUserDetails(false);
+    setUserDetails({ age: "", gender: "", email: "", phone: "" });
   };
 
   if (!selectedAssessment) {
@@ -134,17 +264,17 @@ const Assessment = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {Object.entries(assessments).map(([id, assessment]) => (
               <Card key={id} className="hover:shadow-medium transition-all duration-300 cursor-pointer" onClick={() => handleAssessmentSelect(id)}>
                 <CardHeader>
-                  <CardTitle className="text-xl">{assessment.title}</CardTitle>
-                  <CardDescription>{assessment.description}</CardDescription>
+                  <CardTitle className="text-lg">{assessment.title}</CardTitle>
+                  <CardDescription className="text-sm">{assessment.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center mb-4">
                     <Badge variant="secondary">{assessment.questions.length} questions</Badge>
-                    <Badge variant="outline">5-10 min</Badge>
+                    <Badge variant="outline">5-15 min</Badge>
                   </div>
                   <Button variant="therapeutic" className="w-full">
                     Start Assessment
@@ -153,6 +283,131 @@ const Assessment = () => {
               </Card>
             ))}
           </div>
+          </div>
+        </div>
+        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
+      </div>
+    );
+  }
+
+  if (showUserDetails) {
+    const assessment = assessments[selectedAssessment as keyof typeof assessments];
+    return (
+      <div className="min-h-screen bg-gradient-calm">
+        <Navigation />
+        <div className="py-12">
+          <div className="container mx-auto px-6">
+            <div className="max-w-2xl mx-auto">
+              <Button 
+                variant="ghost" 
+                onClick={resetAssessment}
+                className="mb-4"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Back to Assessments
+              </Button>
+              
+              <Card className="shadow-medium">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl">{assessment.title}</CardTitle>
+                  <CardDescription>{assessment.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="bg-gradient-to-r from-primary/10 to-accent-warm/10 p-4 rounded-lg">
+                    <h3 className="font-semibold mb-2 flex items-center">
+                      <User className="h-5 w-5 mr-2" />
+                      Optional Information
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Providing these details helps us give you better insights (completely optional and confidential)
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="age" className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Age Range
+                      </Label>
+                      <Select value={userDetails.age} onValueChange={(value) => setUserDetails(prev => ({...prev, age: value}))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select age range" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="18-25">18-25</SelectItem>
+                          <SelectItem value="26-35">26-35</SelectItem>
+                          <SelectItem value="36-45">36-45</SelectItem>
+                          <SelectItem value="46-55">46-55</SelectItem>
+                          <SelectItem value="56-65">56-65</SelectItem>
+                          <SelectItem value="65+">65+</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="gender" className="flex items-center">
+                        <User className="h-4 w-4 mr-2" />
+                        Gender
+                      </Label>
+                      <Select value={userDetails.gender} onValueChange={(value) => setUserDetails(prev => ({...prev, gender: value}))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="non-binary">Non-binary</SelectItem>
+                          <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="flex items-center">
+                        <Mail className="h-4 w-4 mr-2" />
+                        Email (Optional)
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={userDetails.email}
+                        onChange={(e) => setUserDetails(prev => ({...prev, email: e.target.value}))}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="flex items-center">
+                        <Phone className="h-4 w-4 mr-2" />
+                        Phone (Optional)
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        value={userDetails.phone}
+                        onChange={(e) => setUserDetails(prev => ({...prev, phone: e.target.value}))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-muted p-4 rounded-lg text-sm text-muted-foreground">
+                    <p className="font-medium mb-2">Privacy Notice:</p>
+                    <p>Your responses are completely confidential and encrypted. This assessment is for informational purposes only and is not a substitute for professional medical advice.</p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button variant="outline" className="flex-1" onClick={() => setShowUserDetails(false)}>
+                      Skip Details
+                    </Button>
+                    <Button variant="therapeutic" className="flex-1" onClick={startAssessment}>
+                      Start Assessment
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
         <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
