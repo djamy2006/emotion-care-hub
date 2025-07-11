@@ -30,10 +30,12 @@ export const Navigation = () => {
             className="flex items-center cursor-pointer" 
             onClick={() => navigate("/")}
           >
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center mr-3">
-              <span className="text-primary-foreground font-bold text-lg">M</span>
-            </div>
-            <span className="text-xl font-bold text-foreground">MindCare</span>
+            <img 
+              src="/lovable-uploads/97ff300d-0fc5-4b09-a50b-28b126994075.png"
+              alt="Mind Hug For You Logo"
+              className="w-10 h-10 mr-3"
+            />
+            <span className="text-xl font-bold text-foreground">Mind Hug For You</span>
           </div>
 
           {/* Desktop Navigation */}
