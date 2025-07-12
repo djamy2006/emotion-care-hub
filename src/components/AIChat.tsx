@@ -127,8 +127,8 @@ export const AIChat = ({ isOpen, onToggle }: AIChatProps) => {
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-strong z-50 flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-gradient-primary text-primary-foreground rounded-t-lg">
+    <Card className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] max-h-[calc(100vh-3rem)] shadow-strong z-50 flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-gradient-primary text-primary-foreground rounded-t-lg flex-shrink-0">
         <CardTitle className="text-lg font-semibold flex items-center">
           <Bot className="h-5 w-5 mr-2" />
           AI Wellness Assistant
@@ -143,9 +143,9 @@ export const AIChat = ({ isOpen, onToggle }: AIChatProps) => {
         </Button>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
+      <CardContent className="flex-1 flex flex-col p-0 min-h-0">
+        <ScrollArea className="flex-1 px-4 py-2">
+          <div className="space-y-4 pr-2">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -156,7 +156,7 @@ export const AIChat = ({ isOpen, onToggle }: AIChatProps) => {
               >
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-lg p-3 text-sm",
+                    "max-w-[80%] rounded-lg p-3 text-sm break-words",
                     message.sender === "user"
                       ? "bg-primary text-primary-foreground"
                       : message.type === "crisis"
@@ -174,8 +174,8 @@ export const AIChat = ({ isOpen, onToggle }: AIChatProps) => {
                         )}
                       </div>
                     )}
-                    <div className="flex-1">
-                      <p className="whitespace-pre-wrap">{message.content}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="whitespace-pre-wrap break-words">{message.content}</p>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
