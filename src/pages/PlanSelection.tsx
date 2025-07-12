@@ -164,11 +164,11 @@ const PlanSelection = () => {
             </p>
           </div>
 
-          <Tabs defaultValue="subscription" className="max-w-6xl mx-auto">
+            <Tabs defaultValue="payperuse" className="max-w-6xl mx-auto">
             <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="subscription">Best Value Packages</TabsTrigger>
-              <TabsTrigger value="appointments">Scheduled Sessions</TabsTrigger>
               <TabsTrigger value="payperuse">Pay Per Use</TabsTrigger>
+              <TabsTrigger value="appointments">Scheduled Sessions</TabsTrigger>
+              <TabsTrigger value="subscription">Special Packages</TabsTrigger>
             </TabsList>
 
             {/* Subscription Plans */}

@@ -6,10 +6,47 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, RotateCcw, User, Mail, Phone, Calendar } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, User, Mail, Phone, Calendar, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { AIChat } from "@/components/AIChat";
+
+// Pre-assessment questionnaire to identify suitable tests
+const preAssessmentQuestions = [
+  {
+    id: 1,
+    question: "How would you describe your current mood most days?",
+    options: [
+      { value: "sad", label: "Sad, down, or hopeless", tests: ["phq-9", "dass-21"] },
+      { value: "anxious", label: "Nervous, worried, or on edge", tests: ["gad-7", "dass-21"] },
+      { value: "stressed", label: "Overwhelmed or stressed", tests: ["pss", "k6"] },
+      { value: "empty", label: "Empty or disconnected", tests: ["phq-9", "who-5"] },
+      { value: "mixed", label: "A mix of different emotions", tests: ["dass-21", "k6"] }
+    ]
+  },
+  {
+    id: 2,
+    question: "Which area of your life is most affected?",
+    options: [
+      { value: "work", label: "Work or studies", tests: ["pss", "gad-7"] },
+      { value: "relationships", label: "Relationships and social connections", tests: ["phq-9", "who-5"] },
+      { value: "daily", label: "Daily activities and self-care", tests: ["phq-9", "dass-21"] },
+      { value: "sleep", label: "Sleep and energy levels", tests: ["phq-9", "k6"] },
+      { value: "physical", label: "Physical health and symptoms", tests: ["dass-21", "pss"] }
+    ]
+  },
+  {
+    id: 3,
+    question: "When did you first notice these concerns?",
+    options: [
+      { value: "recent", label: "Within the last few weeks", tests: ["gad-7", "pss"] },
+      { value: "months", label: "A few months ago", tests: ["phq-9", "dass-21"] },
+      { value: "long", label: "Many months or years", tests: ["dass-21", "who-5"] },
+      { value: "always", label: "I've always felt this way", tests: ["phq-9", "k6"] },
+      { value: "episodes", label: "It comes and goes in episodes", tests: ["gad-7", "dass-21"] }
+    ]
+  }
+];
 
 const assessments = {
   "phq-9": {
@@ -156,6 +193,9 @@ const Assessment = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showUserDetails, setShowUserDetails] = useState(false);
+  const [showPreAssessment, setShowPreAssessment] = useState(true);
+  const [preAssessmentAnswers, setPreAssessmentAnswers] = useState<string[]>([]);
+  const [recommendedTests, setRecommendedTests] = useState<string[]>([]);
   const [userDetails, setUserDetails] = useState({
     age: "",
     gender: "",
@@ -234,14 +274,109 @@ const Assessment = () => {
     return { level: "Unknown", color: "bg-gray-500" };
   };
 
+  const handlePreAssessmentAnswer = (questionIndex: number, value: string) => {
+    const newAnswers = [...preAssessmentAnswers];
+    newAnswers[questionIndex] = value;
+    setPreAssessmentAnswers(newAnswers);
+  };
+
+  const generateRecommendations = () => {
+    const testCounts: Record<string, number> = {};
+    
+    preAssessmentAnswers.forEach((answer, index) => {
+      const question = preAssessmentQuestions[index];
+      const selectedOption = question.options.find(opt => opt.value === answer);
+      if (selectedOption) {
+        selectedOption.tests.forEach(test => {
+          testCounts[test] = (testCounts[test] || 0) + 1;
+        });
+      }
+    });
+    
+    const sortedTests = Object.entries(testCounts)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 3)
+      .map(([test]) => test);
+    
+    setRecommendedTests(sortedTests);
+    setShowPreAssessment(false);
+  };
+
   const resetAssessment = () => {
     setSelectedAssessment(null);
     setCurrentQuestion(0);
     setAnswers([]);
     setIsCompleted(false);
     setShowUserDetails(false);
+    setShowPreAssessment(true);
+    setPreAssessmentAnswers([]);
+    setRecommendedTests([]);
     setUserDetails({ age: "", gender: "", email: "", phone: "" });
   };
+
+  // Pre-assessment questionnaire
+  if (showPreAssessment) {
+    return (
+      <div className="min-h-screen bg-gradient-calm">
+        <Navigation />
+        <div className="py-12">
+          <div className="container mx-auto px-6">
+            <div className="max-w-2xl mx-auto">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate("/")}
+                className="mb-4"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+              
+              <Card className="shadow-medium">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl">Find Your Right Assessment</CardTitle>
+                  <CardDescription>
+                    Answer a few quick questions to help us recommend the most suitable mental health assessment for you
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {preAssessmentQuestions.map((question, index) => (
+                    <div key={question.id} className="space-y-4">
+                      <h3 className="font-semibold text-lg">{question.question}</h3>
+                      <div className="space-y-2">
+                        {question.options.map((option) => (
+                          <Button
+                            key={option.value}
+                            variant={preAssessmentAnswers[index] === option.value ? "therapeutic" : "outline"}
+                            className="w-full justify-start text-left h-auto py-3"
+                            onClick={() => handlePreAssessmentAnswer(index, option.value)}
+                          >
+                            {option.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="pt-6">
+                    <Button 
+                      variant="therapeutic" 
+                      className="w-full"
+                      onClick={generateRecommendations}
+                      disabled={preAssessmentAnswers.length < preAssessmentQuestions.length}
+                    >
+                      Get My Recommended Assessments
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+        <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
+      </div>
+    );
+  }
 
   if (!selectedAssessment) {
     return (
@@ -252,36 +387,73 @@ const Assessment = () => {
           <div className="text-center mb-12">
             <Button 
               variant="ghost" 
-              onClick={() => navigate("/")}
+              onClick={() => setShowPreAssessment(true)}
               className="mb-4"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
-              Back to Home
+              Back to Questionnaire
             </Button>
-            <h1 className="text-4xl font-bold text-foreground mb-4">Mental Health Assessments</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-4">Recommended Assessments</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose a clinically validated assessment to better understand your mental health
+              Based on your responses, these assessments are most suitable for you
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {Object.entries(assessments).map(([id, assessment]) => (
-              <Card key={id} className="hover:shadow-medium transition-all duration-300 cursor-pointer" onClick={() => handleAssessmentSelect(id)}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{assessment.title}</CardTitle>
-                  <CardDescription className="text-sm">{assessment.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between items-center mb-4">
-                    <Badge variant="secondary">{assessment.questions.length} questions</Badge>
-                    <Badge variant="outline">5-15 min</Badge>
-                  </div>
-                  <Button variant="therapeutic" className="w-full">
-                    Start Assessment
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+          {/* Recommended Tests */}
+          {recommendedTests.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-center mb-6">AI Recommended for You</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {recommendedTests.map((id) => {
+                  const assessment = assessments[id as keyof typeof assessments];
+                  return (
+                    <Card key={id} className="hover:shadow-medium transition-all duration-300 cursor-pointer border-primary/50 bg-gradient-to-br from-primary/5 to-accent-warm/5" onClick={() => handleAssessmentSelect(id)}>
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-5 w-5 text-primary" />
+                          <Badge variant="default">Recommended</Badge>
+                        </div>
+                        <CardTitle className="text-lg">{assessment.title}</CardTitle>
+                        <CardDescription className="text-sm">{assessment.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex justify-between items-center mb-4">
+                          <Badge variant="secondary">{assessment.questions.length} questions</Badge>
+                          <Badge variant="outline">5-15 min</Badge>
+                        </div>
+                        <Button variant="therapeutic" className="w-full">
+                          Start Assessment
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* All Available Tests */}
+          <div className="border-t pt-8">
+            <h2 className="text-2xl font-semibold text-center mb-6">All Available Assessments</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {Object.entries(assessments).map(([id, assessment]) => (
+                <Card key={id} className="hover:shadow-medium transition-all duration-300 cursor-pointer" onClick={() => handleAssessmentSelect(id)}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{assessment.title}</CardTitle>
+                    <CardDescription className="text-sm">{assessment.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center mb-4">
+                      <Badge variant="secondary">{assessment.questions.length} questions</Badge>
+                      <Badge variant="outline">5-15 min</Badge>
+                    </div>
+                    <Button variant="therapeutic" className="w-full">
+                      Start Assessment
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
           </div>
         </div>
@@ -449,29 +621,50 @@ const Assessment = () => {
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-primary/10 to-accent-warm/10 p-6 rounded-lg text-center">
-                  <h3 className="font-semibold text-lg mb-2">Ready to get professional help?</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Join our platform to access certified mental health professionals, 
-                    flexible therapy options, and a supportive community.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
+                <div className="space-y-4">
+                  {/* Professional Help CTA */}
+                  <div className="bg-gradient-to-r from-primary/10 to-accent-warm/10 p-6 rounded-lg text-center">
+                    <h3 className="font-semibold text-lg mb-2">Ready to get professional help?</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Join our platform to access certified mental health professionals, 
+                      flexible therapy options, and a supportive community.
+                    </p>
                     <Button 
                       variant="hero" 
-                      className="flex-1"
+                      className="w-full"
                       onClick={() => navigate("/signup")}
                     >
                       Sign Up for Professional Support
                     </Button>
+                  </div>
+
+                  {/* Call Request CTA */}
+                  <div className="bg-gradient-to-r from-accent-warm/10 to-secondary-accent/10 p-6 rounded-lg text-center">
+                    <h3 className="font-semibold text-lg mb-2">Want to speak with someone today?</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Request a call from our mental health team to discuss your results 
+                      and explore personalized treatment options.
+                    </p>
                     <Button 
                       variant="outline" 
-                      onClick={resetAssessment}
-                      className="flex-1"
+                      className="w-full"
+                      onClick={() => {
+                        // This would normally trigger a call request form or direct to contact
+                        alert("Call request feature - would normally open a contact form or schedule a call");
+                      }}
                     >
-                      <RotateCcw className="h-4 w-4 mr-2" />
-                      Take Another Assessment
+                      Request a Call from Our Team
                     </Button>
                   </div>
+
+                  <Button 
+                    variant="ghost" 
+                    onClick={resetAssessment}
+                    className="w-full"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Take Another Assessment
+                  </Button>
                 </div>
               </CardContent>
             </Card>
