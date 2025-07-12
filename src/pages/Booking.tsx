@@ -21,6 +21,7 @@ import { Navigation } from "@/components/Navigation";
 import { AIChat } from "@/components/AIChat";
 
 const providers = [
+  // Psychologists
   {
     id: 1,
     name: "Dr. Sarah Johnson",
@@ -33,10 +34,28 @@ const providers = [
     avatar: "/placeholder.svg",
     availability: ["Video", "Audio", "Chat"],
     bio: "Specialized in cognitive behavioral therapy and mindfulness-based interventions.",
-    qualifications: ["PhD Psychology", "Licensed Clinical Psychologist", "CBT Certified"]
+    qualifications: ["PhD Psychology", "Licensed Clinical Psychologist", "CBT Certified"],
+    category: "psychologist"
   },
   {
     id: 2,
+    name: "Dr. Emma Williams",
+    title: "Child Psychologist",
+    specialization: "Child & Adolescent Therapy",
+    experience: "6 years",
+    rating: 4.8,
+    reviews: 94,
+    price: 110,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "In-Person"],
+    bio: "Expert in child development and family therapy approaches.",
+    qualifications: ["PhD Developmental Psychology", "Child Therapy Specialist"],
+    category: "psychologist"
+  },
+  
+  // Psychiatrists
+  {
+    id: 3,
     name: "Dr. Michael Chen",
     title: "Psychiatrist",
     specialization: "ADHD & Mood Disorders",
@@ -47,13 +66,31 @@ const providers = [
     avatar: "/placeholder.svg",
     availability: ["Video", "Audio", "In-Person"],
     bio: "Expert in medication management and comprehensive psychiatric care.",
-    qualifications: ["MD Psychiatry", "Board Certified", "ADHD Specialist"]
+    qualifications: ["MD Psychiatry", "Board Certified", "ADHD Specialist"],
+    category: "psychiatrist"
   },
   {
-    id: 3,
+    id: 4,
+    name: "Dr. Priya Sharma",
+    title: "Psychiatrist",
+    specialization: "Bipolar & Schizophrenia",
+    experience: "15 years",
+    rating: 4.9,
+    reviews: 156,
+    price: 200,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "In-Person"],
+    bio: "Specialized in severe mental illness and recovery-oriented care.",
+    qualifications: ["MD Psychiatry", "Fellowship in Psychotic Disorders"],
+    category: "psychiatrist"
+  },
+
+  // NLP Practitioners
+  {
+    id: 5,
     name: "Lisa Rodriguez",
-    title: "NLP Expert & Life Coach",
-    specialization: "Personal Growth",
+    title: "NLP Practitioner",
+    specialization: "Personal Growth & Transformation",
     experience: "6 years",
     rating: 4.7,
     reviews: 156,
@@ -61,7 +98,108 @@ const providers = [
     avatar: "/placeholder.svg",
     availability: ["Video", "Chat", "In-Person"],
     bio: "Combining NLP techniques with modern coaching methodologies.",
-    qualifications: ["Certified NLP Practitioner", "ICF Certified Coach", "Mindfulness Teacher"]
+    qualifications: ["Certified NLP Practitioner", "ICF Certified Coach", "Mindfulness Teacher"],
+    category: "nlp"
+  },
+  {
+    id: 6,
+    name: "Mark Thompson",
+    title: "Master NLP Practitioner",
+    specialization: "Behavioral Change & Habits",
+    experience: "10 years",
+    rating: 4.6,
+    reviews: 203,
+    price: 95,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "Audio", "Chat"],
+    bio: "Expert in rapid behavioral change and overcoming limiting beliefs.",
+    qualifications: ["Master NLP Practitioner", "Timeline Therapy Certified"],
+    category: "nlp"
+  },
+
+  // Yoga Experts
+  {
+    id: 7,
+    name: "Anjali Patel",
+    title: "Yoga Expert & Mindfulness Teacher",
+    specialization: "Therapeutic Yoga & Meditation",
+    experience: "8 years",
+    rating: 4.9,
+    reviews: 234,
+    price: 65,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "In-Person"],
+    bio: "Combining traditional yoga with modern therapeutic approaches for mental wellness.",
+    qualifications: ["Yoga Alliance RYT-500", "Mindfulness-Based Stress Reduction Certified"],
+    category: "yoga"
+  },
+
+  // Dementia Care Specialists
+  {
+    id: 8,
+    name: "Dr. Robert Anderson",
+    title: "Dementia Care Specialist",
+    specialization: "Alzheimer's & Memory Care",
+    experience: "14 years",
+    rating: 4.8,
+    reviews: 87,
+    price: 150,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "In-Person"],
+    bio: "Specialized in dementia care, family support, and cognitive rehabilitation.",
+    qualifications: ["Geriatric Medicine Certified", "Dementia Care Specialist"],
+    category: "dementia"
+  },
+
+  // ADHD Coaches
+  {
+    id: 9,
+    name: "Jennifer Kim",
+    title: "ADHD Coach",
+    specialization: "ADHD Life Skills & Organization",
+    experience: "5 years",
+    rating: 4.7,
+    reviews: 128,
+    price: 90,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "Audio", "Chat"],
+    bio: "Helping individuals with ADHD develop practical life skills and coping strategies.",
+    qualifications: ["Certified ADHD Coach", "Executive Function Specialist"],
+    category: "adhd"
+  },
+
+  // Gym Trainers
+  {
+    id: 10,
+    name: "Alex Martinez",
+    title: "Mental Health Fitness Trainer",
+    specialization: "Exercise for Mental Wellness",
+    experience: "7 years",
+    rating: 4.6,
+    reviews: 167,
+    price: 75,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "In-Person"],
+    bio: "Personal trainer specializing in exercise programs for mental health improvement.",
+    qualifications: ["Certified Personal Trainer", "Mental Health First Aid"],
+    category: "fitness"
+  },
+
+  // Dieticians/Nutritionists
+  {
+    id: 11,
+    name: "Dr. Maya Singh",
+    title: "Clinical Nutritionist",
+    specialization: "Nutrition for Mental Health",
+    experience: "9 years",
+    rating: 4.8,
+    reviews: 145,
+    price: 100,
+    avatar: "/placeholder.svg",
+    availability: ["Video", "Audio", "Chat"],
+    bio: "Registered dietitian focusing on the gut-brain connection and nutritional psychiatry.",
+    qualifications: ["Registered Dietitian", "Nutritional Psychiatry Certified"],
+    category: "nutrition"
   }
 ];
 
@@ -284,11 +422,16 @@ const Booking = () => {
         </div>
 
         <Tabs defaultValue="all" className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="all">All Providers</TabsTrigger>
-            <TabsTrigger value="psychologist">Psychologists</TabsTrigger>
-            <TabsTrigger value="psychiatrist">Psychiatrists</TabsTrigger>
-            <TabsTrigger value="coach">Coaches</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 lg:grid-cols-9 mb-8 h-auto p-1">
+            <TabsTrigger value="all" className="text-xs px-2 py-1">All</TabsTrigger>
+            <TabsTrigger value="psychologist" className="text-xs px-2 py-1">Psychology</TabsTrigger>
+            <TabsTrigger value="psychiatrist" className="text-xs px-2 py-1">Psychiatry</TabsTrigger>
+            <TabsTrigger value="nlp" className="text-xs px-2 py-1">NLP</TabsTrigger>
+            <TabsTrigger value="yoga" className="text-xs px-2 py-1">Yoga</TabsTrigger>
+            <TabsTrigger value="dementia" className="text-xs px-2 py-1">Dementia</TabsTrigger>
+            <TabsTrigger value="adhd" className="text-xs px-2 py-1">ADHD</TabsTrigger>
+            <TabsTrigger value="fitness" className="text-xs px-2 py-1">Fitness</TabsTrigger>
+            <TabsTrigger value="nutrition" className="text-xs px-2 py-1">Nutrition</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all" className="space-y-6">
@@ -296,15 +439,35 @@ const Booking = () => {
           </TabsContent>
 
           <TabsContent value="psychologist" className="space-y-6">
-            {providers.filter(p => p.title.includes("Psychologist")).map(renderProviderCard)}
+            {providers.filter(p => p.category === "psychologist").map(renderProviderCard)}
           </TabsContent>
 
           <TabsContent value="psychiatrist" className="space-y-6">
-            {providers.filter(p => p.title.includes("Psychiatrist")).map(renderProviderCard)}
+            {providers.filter(p => p.category === "psychiatrist").map(renderProviderCard)}
           </TabsContent>
 
-          <TabsContent value="coach" className="space-y-6">
-            {providers.filter(p => p.title.includes("Coach")).map(renderProviderCard)}
+          <TabsContent value="nlp" className="space-y-6">
+            {providers.filter(p => p.category === "nlp").map(renderProviderCard)}
+          </TabsContent>
+
+          <TabsContent value="yoga" className="space-y-6">
+            {providers.filter(p => p.category === "yoga").map(renderProviderCard)}
+          </TabsContent>
+
+          <TabsContent value="dementia" className="space-y-6">
+            {providers.filter(p => p.category === "dementia").map(renderProviderCard)}
+          </TabsContent>
+
+          <TabsContent value="adhd" className="space-y-6">
+            {providers.filter(p => p.category === "adhd").map(renderProviderCard)}
+          </TabsContent>
+
+          <TabsContent value="fitness" className="space-y-6">
+            {providers.filter(p => p.category === "fitness").map(renderProviderCard)}
+          </TabsContent>
+
+          <TabsContent value="nutrition" className="space-y-6">
+            {providers.filter(p => p.category === "nutrition").map(renderProviderCard)}
           </TabsContent>
         </Tabs>
         </div>
